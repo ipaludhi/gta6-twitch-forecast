@@ -177,8 +177,14 @@ def wstd(xs, ws, m):
 def fallback_forecast(case, p1):
     """Comparable-kernel log-ratio ensemble; falls back to persistence."""
     logp1 = math.log(p1)
+    target_name = game_name(case).strip().lower()
     curves = []
     for comp in case.get("comparables") or []:
+        # Never let the target's own pre-release series pose as a launch
+        # curve: the GTA VI category's own history is a comparable in the
+        # case file, but it has no release-day curve yet.
+        if target_name and (comp.get("name") or "").strip().lower() == target_name:
+            continue
         c = comparable_curve(comp)
         if c is not None:
             curves.append(c)
@@ -215,7 +221,11 @@ def fallback_forecast(case, p1):
             rows.append([p1 * math.exp(Z[i] * 0.15 * math.sqrt(h + 1)) for i in range(5)])
             continue
         m = wmean(rs, ws)
-        s = wstd(rs, ws, m)
+        # Floor the spread: three comparables that happen to agree must not
+        # produce a degenerate near-zero band. 0.05 is far below every
+        # observed per-hour spread (0.20-0.49 in backtest), so it only
+        # guards the degenerate case and never binds on real data.
+        s = max(wstd(rs, ws, m), 0.05)
         rows.append([p1 * math.exp(m + Z[i] * s) for i in range(5)])
     return rows
 

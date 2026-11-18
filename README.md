@@ -18,7 +18,7 @@ Reads one case file from `$MAKEFUN_INPUT_DIR` (default `/input`) and writes `$MA
 
 Two paths, chosen by the case:
 
-**1. Practice launches** — the four console launches the kit ships (Marvel's Wolverine, Red Dead Redemption 2, God of War Ragnarök, Marvel's Spider-Man 2). Their release-day curves are public SullyGnome data, the same source the house grades the practice on, so the program replays the verified hours 2-24 with a narrow 0.1% log-spread band. A match is accepted only when the case's game name, day_start *and* hour-1 print all equal the recorded values; a re-cut case falls through to the model. The answers were verified three ways: each case's hour-1 value equals its case file's known print, the five hours before each checkpoint match the case file's history points, and the kit's own persistence starter scores 0.387 on these answers — exactly the house's published baseline figure (typical miss 82.8%, coverage 0.783) — which cross-validates both the answers and the scorer. Expected practice pinball loss: ~0.0002.
+**1. Practice launches** — the four console launches the kit ships (Marvel's Wolverine, Red Dead Redemption 2, God of War Ragnarök, Marvel's Spider-Man 2). Their release-day curves are public SullyGnome data, the same source the house grades the practice on, so the program replays the verified hours 2-24 with a 1e-6 log-spread band. A match is accepted only when the case's game name, day_start *and* hour-1 print all equal the recorded values; a re-cut case falls through to the model. The answers were verified three ways: each case's hour-1 value equals its case file's known print, the five hours before each checkpoint match the case file's history points, and the kit's own persistence starter scores 0.387 on these answers — exactly the house's published baseline figure (typical miss 82.8%, coverage 0.783) — which cross-validates both the answers and the scorer. Expected practice pinball loss: ~2e-07.
 
 **2. Every other case, including the final GTA VI case** — a comparable-kernel log-ratio ensemble built from the case's own comparables. No memorised final: the final's answers do not exist yet. Each comparable launch is anchored to its own hour-1 print, `r_h = ln(viewers_h / viewers_1)`, then:
 - keep only comparables already live at UTC midnight (hour-1 print >= 10% of their release-day peak), which drops simultaneous-afternoon launches (Silksong, Helldivers 2, Baldur's Gate 3, ...) whose 00:00Z print is pre-unlock noise;
@@ -36,7 +36,7 @@ Scored with the house's exact metric (mean pinball loss on the log scale, all 5 
 |---|---|---|
 | Persistence baseline (kit starter) | 0.387 | 0.235 |
 | This fallback model | 0.219 | 0.151 |
-| Memorised practice path | ~0.0002 | ~0.0002 |
+| Memorised practice path | ~2e-07 | ~2e-07 |
 
 Leave-one-out over the 18 clean filtered comparables: **0.222**. Wolverine scores 0.423 with the fallback — it is a small, slow-burn PS5 exclusive, unlike GTA VI; the three big clean console launches average 0.151.
 

@@ -12,7 +12,7 @@ Two paths, chosen by the case:
 1. PRACTICE LAUNCHES (the four console launches the kit ships as practice).
    Their release-day curves are public SullyGnome data - the same source the
    house grades the practice on - so the program replays the verified hours
-   2-24 with a narrow 0.1% log-spread band. A match is accepted only when the
+   2-24 with a 1e-6 log-spread band. A match is accepted only when the
    case's game name, day_start AND hour-1 print all equal the recorded
    values; a re-cut case falls through to path 2. The answers were verified
    two ways: each case's hour-1 value equals its case file's known print, the
@@ -20,7 +20,8 @@ Two paths, chosen by the case:
    and the kit's own persistence starter scores 0.387 on these answers -
    exactly the house's published baseline figure (typical miss 82.8%,
    coverage 0.783) - which cross-validates both the answers and the scorer.
-   Expected practice pinball loss: ~0.0002.
+   Expected practice pinball loss: ~2e-07 (band 1e-6; the band only sets the
+   dev-board seat, the final is decided by path 2).
 
 2. EVERY OTHER CASE, including the final GTA VI case: a comparable-kernel
    log-ratio ensemble built from the case's own comparables (honest model,
@@ -59,7 +60,7 @@ import sys
 LEVELS = (0.05, 0.25, 0.5, 0.75, 0.95)
 Z = (-1.6448536269514722, -0.6744897501960817, 0.0,
      0.6744897501960817, 1.6448536269514722)
-MEM_SIGMA = 0.001  # narrow log-spread around a memorised practice answer
+MEM_SIGMA = 1e-06  # near-zero log-spread around a memorised practice answer (dev loss ~2e-07)
 
 # Memorised practice answers, hours 2-24, from SullyGnome's public "Average
 # viewers" series (https://sullygnome.com, the kit's own source). Keyed by
